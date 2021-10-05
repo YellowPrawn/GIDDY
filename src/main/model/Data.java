@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Data {
-    private ArrayList<Object> colX;
-    private ArrayList<Object> colY;
+    private final ArrayList<Object> colX;
+    private final ArrayList<Object> colY;
     private String headerX;
     private String headerY;
     private String typeX;
