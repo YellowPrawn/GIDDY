@@ -17,5 +17,5 @@ I chose to pursue this project as a statistics student who feels that obtaining 
 - As a user, I want to be able to find summary statistics for a quantitative variable and a categorical variable (mean, median, standard deviation, etc)
 - As a user, I want to be able to find summary statistics for 2 quantitative variables (count, column percentages, row percentages, etc)
 - As a user, I want to be able to know what plot is the best for my data
-- As a user, I want to be able to predict data points using regression or classification
+- As a user, I want to be able to predict data points using linear regression
 - As a user, I want to be able to add my dataset
