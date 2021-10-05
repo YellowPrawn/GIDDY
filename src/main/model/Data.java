@@ -26,7 +26,7 @@ public class Data {
     private void readCSV(String path) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(path));
         scanner.useDelimiter(",");
-        int i = 0;
+        double i = 0;
         while (scanner.hasNext()) {
             splitData(scanner.next(), i);
             i++;
@@ -34,10 +34,10 @@ public class Data {
         scanner.close();
     }
     // REQUIRES: Scanner object and count
-    // MODIFIES: colX, colY, headerX, headerY
+    // MODIFIES: this
     // EFFECTS: splits 2 column CSV data into 2 columns and headers
 
-    private void splitData(String data, int i) {
+    private void splitData(String data, double i) {
         if (i == 0) {
             headerX = data;
         } else if (i == 1) {
@@ -50,35 +50,35 @@ public class Data {
             }
         }
     }
-    //MODIFIES: typeX
+    //MODIFIES: this
     //EFFECTS: determines colX type
 
     private void setTypeX() {
         try {
-            int temp = (Integer)colX.get(0);
-            typeX = "Integer";
+            double temp = (Double)colX.get(0);
+            typeX = "Double";
         } catch (ClassCastException e) {
             typeX = "String";
         }
     }
-    //MODIFIES: typeY
+    //MODIFIES: this
     //EFFECTS: determines colY type
 
     private void setTypeY() {
         try {
-            int temp = (Integer)colY.get(0);
-            typeY = "Integer";
+            double temp = (Double)colY.get(0);
+            typeY = "Double";
         } catch (ClassCastException e) {
             typeY = "String";
         }
     }
     // REQUIRES: A non-null String
-    // MODIFIES: colX, colY
+    // MODIFIES: this
     // EFFECTS: changes type of observation to appropriate data type for processing
 
     private Object changeObservationType(String data) {
         try {
-            return Integer.parseInt(data);
+            return Double.parseDouble(data);
         } catch (NumberFormatException e) {
             return data;
         }

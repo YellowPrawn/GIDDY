@@ -10,6 +10,5 @@ public class Main {
         System.out.println("enter file name");
         Scanner path = new Scanner(System.in);
         Data data = new Data("src/main/data/" + path.nextLine());
-
     }
 }
