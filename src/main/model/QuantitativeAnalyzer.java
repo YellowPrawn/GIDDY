@@ -6,7 +6,7 @@ import java.util.Collections;
 import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
 
-public class QuantitativeAnalyzer {
+public abstract class QuantitativeAnalyzer {
     Data data;
 
     public QuantitativeAnalyzer(Data data) {
@@ -26,17 +26,12 @@ public class QuantitativeAnalyzer {
 
     // EFFECTS: returns standard deviation of column
     protected double getSD(ArrayList<Double> col) {
-        return sqrt(getVariance(col));
-    }
-
-    // EFFECTS: returns variance of column
-    protected double getVariance(ArrayList<Double> col) {
         double sum = 0;
         double mean = getMean(col);
         for (double i : col) {
             sum += (i - mean) * (i - mean);
         }
-        return sum / col.size();
+        return sqrt(sum / col.size());
     }
 
     // EFFECTS: returns 1st quartile of column

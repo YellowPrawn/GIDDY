@@ -36,14 +36,6 @@ public class QuantitativeDataframe extends QuantitativeAnalyzer {
         return getSD(colY);
     }
 
-    public double getColXVariance() {
-        return getVariance(colX);
-    }
-
-    public double getColYVariance() {
-        return getVariance(colY);
-    }
-
     public double getColX1QR() {
         return get1QR(colX);
     }
