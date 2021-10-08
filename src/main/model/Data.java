@@ -25,7 +25,7 @@ public class Data {
 
     private void readCSV(String path) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(path));
-        scanner.useDelimiter(",");
+        scanner.useDelimiter(",|\\n");
         double i = 0;
         while (scanner.hasNext()) {
             splitData(scanner.next(), i);
@@ -44,9 +44,9 @@ public class Data {
             headerY = data;
         } else {
             if (i % 2 == 0) {
-                colX.add(changeObservationType(data.replace("\n", "").replace("\r", "")));
+                colX.add(changeObservationType(data));
             } else {
-                colY.add(changeObservationType(data.replace("\n", "").replace("\r", "")));
+                colY.add(changeObservationType(data));
             }
         }
     }
