@@ -23,14 +23,13 @@ public class Data {
     }
 
     // REQUIRES: CSV-like scanner
-    // EFFECTS: reads CSV scanner into project
+    // EFFECTS: reads CSV scanner into project. Stops input if no new lines exist or line with : is entered
     private void readCSV(Scanner scanner) {
         scanner.useDelimiter(",|\\n");
         double i = 0;
         while (scanner.hasNext()) {
             String nextLine = scanner.next();
             if (nextLine.contains(":")) {
-                scanner.nextLine();
                 break;
             }
             splitData(nextLine, i);

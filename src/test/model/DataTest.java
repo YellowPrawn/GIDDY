@@ -17,7 +17,7 @@ class DataTest {
     Data uniqueHeaderData;
     @BeforeEach
     void runBefore() throws FileNotFoundException {
-        quantitativeData = new Data(new Scanner("x,y\n" + "1,10.3\n" + "2,12.7\n" + "3,20.2"));
+        quantitativeData = new Data(new Scanner("x,y\n" + "1,10.3\n" + "2,12.7\n" + "3,20.2\n" + ":"));
         mixedData = new Data(new Scanner("x,y\n" + "1,a\n" + "2,b\n" + "3,c"));
         mixedData2 = new Data(new Scanner("x,y\n" + "a,1\n" + "b,2\n" + "c,3"));
         categoricalData = new Data(new Scanner("x,y\n" + "a,d\n" + "b,e\n" + "c,f"));
