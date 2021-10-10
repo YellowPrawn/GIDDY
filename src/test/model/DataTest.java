@@ -23,6 +23,14 @@ class DataTest {
         uniqueHeaderData = new Data("src/main/data/uniqueHeaderData.csv");
     }
     @Test
+    void testSwapColumns() throws FileNotFoundException {
+        Data unswappedMixedData = new Data("src/main/data/mixedData.csv");
+        mixedData.swapColumns();
+        assertEquals(unswappedMixedData.getColX(), mixedData.getColY());
+        assertEquals(unswappedMixedData.getColY(), mixedData.getColX());
+
+    }
+    @Test
     void testGetHeaderX() {
         assertEquals("x",quantitativeData.getHeaderX());
         assertEquals("foo",uniqueHeaderData.getHeaderX());
@@ -38,12 +46,12 @@ class DataTest {
         mixedDataX.add(1.0);
         mixedDataX.add(2.0);
         mixedDataX.add(3.0);
-        assertTrue(mixedDataX.equals(mixedData.getColX()));
+        assertEquals(mixedDataX, mixedData.getColX());
         ArrayList<Object> mixedDataX2 = new ArrayList<>();
         mixedDataX2.add("a");
         mixedDataX2.add("b");
         mixedDataX2.add("c");
-        assertTrue(mixedDataX2.equals(mixedData2.getColX()));
+        assertEquals(mixedDataX2, mixedData2.getColX());
     }
     @Test
     void testGetColYOnMixedData() {
@@ -51,12 +59,12 @@ class DataTest {
         mixedDataY.add("a");
         mixedDataY.add("b");
         mixedDataY.add("c");
-        assertTrue(mixedDataY.equals(mixedData.getColY()));
+        assertEquals(mixedDataY, mixedData.getColY());
         ArrayList<Object> mixedDataY2 = new ArrayList<>();
         mixedDataY2.add(1.0);
         mixedDataY2.add(2.0);
         mixedDataY2.add(3.0);
-        assertTrue(mixedDataY2.equals(mixedData2.getColY()));
+        assertEquals(mixedDataY2, mixedData2.getColY());
     }
     @Test
     void testGetColXOnQuantitativeData() {
@@ -64,7 +72,7 @@ class DataTest {
         quantitativeDataX.add(1.0);
         quantitativeDataX.add(2.0);
         quantitativeDataX.add(3.0);
-        assertTrue(quantitativeDataX.equals(quantitativeData.getColX()));
+        assertEquals(quantitativeDataX, quantitativeData.getColX());
     }
     @Test
     void testGetColYOnQuantitativeData() {
@@ -72,7 +80,7 @@ class DataTest {
         quantitativeDataY.add(10.3);
         quantitativeDataY.add(12.7);
         quantitativeDataY.add(20.2);
-        assertTrue(quantitativeDataY.equals(quantitativeData.getColY()));
+        assertEquals(quantitativeDataY, quantitativeData.getColY());
     }
     @Test
     void testGetColXOnCategoricalData() {
@@ -80,7 +88,7 @@ class DataTest {
         categoricalDataX.add("a");
         categoricalDataX.add("b");
         categoricalDataX.add("c");
-        assertTrue(categoricalDataX.equals(categoricalData.getColX()));
+        assertEquals(categoricalDataX, categoricalData.getColX());
     }
     @Test
     void testGetColYOnCategoricalData() {
@@ -88,7 +96,7 @@ class DataTest {
         categoricalDataY.add("d");
         categoricalDataY.add("e");
         categoricalDataY.add("f");
-        assertTrue(categoricalDataY.equals(categoricalData.getColY()));
+        assertEquals(categoricalDataY, categoricalData.getColY());
     }
     @Test
     void testGetDataOnMixedData() {

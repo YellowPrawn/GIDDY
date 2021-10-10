@@ -21,7 +21,7 @@ public abstract class QuantitativeAnalyzer {
     // EFFECTS: returns median of column
     protected double getMedian(ArrayList<Double> col) {
         int midIndex = round(col.size() / 2);
-        return col.get(midIndex);
+        return sort(col).get(midIndex);
     }
 
     // EFFECTS: returns standard deviation of column
@@ -37,13 +37,13 @@ public abstract class QuantitativeAnalyzer {
     // EFFECTS: returns 1st quartile of column
     protected double get1QR(ArrayList<Double> col) {
         int quartile = round(col.size() / 4);
-        return col.get(quartile);
+        return sort(col).get(quartile);
     }
 
     // EFFECTS: returns 3rd quartile of column
     protected double get3QR(ArrayList<Double> col) {
         int quartile = round(3 * col.size() / 4);
-        return col.get(quartile);
+        return sort(col).get(quartile);
     }
 
     // EFFECTS: returns interquartile range of column

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Data {
-    private final ArrayList<Object> colX;
-    private final ArrayList<Object> colY;
+    private ArrayList<Object> colX;
+    private ArrayList<Object> colY;
     private String headerX;
     private String headerY;
     private String typeX;
@@ -82,6 +82,15 @@ public class Data {
         } catch (NumberFormatException e) {
             return data;
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Swap columns with each other
+    protected void swapColumns() {
+        ArrayList<Object> temp;
+        temp = colX;
+        colX = colY;
+        colY = temp;
     }
 
     public ArrayList<Object> getColX() {
