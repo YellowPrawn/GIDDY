@@ -82,17 +82,13 @@ public abstract class QuantitativeAnalyzer {
         return sum;
     }
 
-    protected double standardizedScore(double i, ArrayList<Double> col) {
-        return i - getMean(col) / getSD(col);
-    }
-
     // EFFECTS: returns sorted column
     protected ArrayList<Double> sort(ArrayList<Double> col) {
         Collections.sort(col);
         return col;
     }
 
-    protected ArrayList<Double> toInt(ArrayList<Object> col) {
+    protected ArrayList<Double> toDouble(ArrayList<Object> col) {
         ArrayList<Double> convertedList = new ArrayList<>();
         for (Object i : col) {
             convertedList.add((Double) i);

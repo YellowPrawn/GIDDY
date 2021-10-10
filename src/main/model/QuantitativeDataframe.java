@@ -3,13 +3,13 @@ package model;
 import java.util.ArrayList;
 
 public class QuantitativeDataframe extends QuantitativeAnalyzer {
-    ArrayList<Double> colX;
-    ArrayList<Double> colY;
+    protected ArrayList<Double> colX;
+    protected ArrayList<Double> colY;
 
     public QuantitativeDataframe(Data data) {
         super(data);
-        colX = toInt(data.getColX());
-        colY = toInt(data.getColX());
+        colX = toDouble(data.getColX());
+        colY = toDouble(data.getColY());
     }
 
     public double getColXMean() {
@@ -44,6 +44,14 @@ public class QuantitativeDataframe extends QuantitativeAnalyzer {
         return get1QR(colY);
     }
 
+    public double getColX3QR() {
+        return get3QR(colX);
+    }
+
+    public double getColY3QR() {
+        return get3QR(colY);
+    }
+
     public double getColXIqR() {
         return getIQR(colX);
     }
@@ -74,6 +82,10 @@ public class QuantitativeDataframe extends QuantitativeAnalyzer {
 
     public double getColYSum() {
         return sum(colY);
+    }
+
+    protected double standardizedScore(double i, ArrayList<Double> col) {
+        return i - getMean(col) / getSD(col);
     }
 
     public double correlationCoefficient() {
