@@ -7,7 +7,7 @@ import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
 
 public abstract class QuantitativeAnalyzer {
-    Data data;
+    protected Data data;
 
     public QuantitativeAnalyzer(Data data) {
         this.data = data;
@@ -88,6 +88,8 @@ public abstract class QuantitativeAnalyzer {
         return col;
     }
 
+    // MODIFIES: THIS
+    // EFFECTS: Changes all elements in a column to doubles
     protected ArrayList<Double> toDouble(ArrayList<Object> col) {
         ArrayList<Double> convertedList = new ArrayList<>();
         for (Object i : col) {

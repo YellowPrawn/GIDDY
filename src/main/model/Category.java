@@ -1,12 +1,12 @@
 package model;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Category {
     private String header;
     private ArrayList<Double> observations = new ArrayList<>();
 
+    // EFFECTS: sets category headers
     public Category(String header) {
         this.header = header;
     }
@@ -17,14 +17,17 @@ public class Category {
         observations.add(element);
     }
 
-    public Double getElement(int i) {
+    // EFFECTS: gets observation at ith position
+    public Double getObservation(int i) {
         return observations.get(i);
     }
 
+    // EFFECTS: gets all observations
     public ArrayList<Double> getObservations() {
         return observations;
     }
 
+    // EFFECTS: gets category headers
     public String getHeader() {
         return header;
     }

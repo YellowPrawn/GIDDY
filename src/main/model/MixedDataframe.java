@@ -6,12 +6,14 @@ import java.util.Objects;
 
 public class MixedDataframe extends QuantitativeAnalyzer {
 
-    private ArrayList<Category> categories = new ArrayList<>();
+    private final ArrayList<Category> categories = new ArrayList<>();
 
+    // EFFECTS: organizes data for processing
     public MixedDataframe(Data data) {
         super(data);
         correctColumnOrder();
         makeCategories();
+        addCategoryData();
     }
 
     // MODIFIES: this
@@ -28,6 +30,18 @@ public class MixedDataframe extends QuantitativeAnalyzer {
         for (int i = 0; i < data.getColX().size(); i++) {
             if (!scanExistingCategories(i)) {
                 categories.add(new Category((String) data.getColX().get(i)));
+            }
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds each observation to corresponding category
+    private void addCategoryData() {
+        for (int i = 0; i < data.getColX().size(); i++) {
+            for (Category c : categories) {
+                if (c.getHeader().equals(data.getColX().get(i))) {
+                    c.addElement((Double) data.getColY().get(i));
+                }
             }
         }
     }
@@ -90,6 +104,15 @@ public class MixedDataframe extends QuantitativeAnalyzer {
         return quartiles;
     }
 
+    // EFFECTS: returns interquartile ranges of all categories
+    public ArrayList<Double> getIQRs() {
+        ArrayList<Double> quartiles = new ArrayList<>();
+        for (Category i : categories) {
+            quartiles.add(getIQR(i.getObservations()));
+        }
+        return quartiles;
+    }
+
     // EFFECTS: returns maximum of all categories
     public ArrayList<Double> maxima() {
         ArrayList<Double> maxima = new ArrayList<>();
@@ -117,6 +140,7 @@ public class MixedDataframe extends QuantitativeAnalyzer {
         return sums;
     }
 
+    // EFFECTS: gets all categories in dataframe
     public ArrayList<Category> getCategories() {
         return categories;
     }

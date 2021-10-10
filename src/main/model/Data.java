@@ -1,6 +1,5 @@
 package model;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,30 +12,36 @@ public class Data {
     private String typeX;
     private String typeY;
 
-    public Data(String path) throws FileNotFoundException {
+    // REQUIRES: CSV-like scanner
+    // EFFECTS: creates 2 columns, reads a "CSV", and sets data types of both columns
+    public Data(Scanner scanner) throws FileNotFoundException {
         colX = new ArrayList<>();
         colY = new ArrayList<>();
-        readCSV(path);
+        readCSV(scanner);
         setTypeX();
         setTypeY();
     }
-    // REQUIRES: existing CSV file
-    // EFFECTS: reads CSV file into project
 
-    private void readCSV(String path) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(path));
+    // REQUIRES: CSV-like scanner
+    // EFFECTS: reads CSV scanner into project
+    private void readCSV(Scanner scanner) {
         scanner.useDelimiter(",|\\n");
         double i = 0;
         while (scanner.hasNext()) {
-            splitData(scanner.next(), i);
+            String nextLine = scanner.next();
+            if (nextLine.contains(":")) {
+                scanner.nextLine();
+                break;
+            }
+            splitData(nextLine, i);
             i++;
         }
         scanner.close();
     }
+
     // REQUIRES: Scanner object and count
     // MODIFIES: this
     // EFFECTS: splits 2 column CSV data into 2 columns and headers
-
     private void splitData(String data, double i) {
         if (i == 0) {
             headerX = data;
@@ -50,9 +55,9 @@ public class Data {
             }
         }
     }
+
     //MODIFIES: this
     //EFFECTS: determines colX type
-
     private void setTypeX() {
         try {
             double temp = (Double)colX.get(0);
@@ -61,9 +66,9 @@ public class Data {
             typeX = "String";
         }
     }
+
     //MODIFIES: this
     //EFFECTS: determines colY type
-
     private void setTypeY() {
         try {
             double temp = (Double)colY.get(0);
@@ -72,10 +77,10 @@ public class Data {
             typeY = "String";
         }
     }
+
     // REQUIRES: A non-null String
     // MODIFIES: this
     // EFFECTS: changes type of observation to appropriate data type for processing
-
     private Object changeObservationType(String data) {
         try {
             return Double.parseDouble(data);
@@ -93,30 +98,37 @@ public class Data {
         colY = temp;
     }
 
+    // EFFECTS: gets x column of data
     public ArrayList<Object> getColX() {
         return colX;
     }
 
+    // EFFECTS: gets y column of data
     public ArrayList<Object> getColY() {
         return colY;
     }
 
+    // EFFECTS: gets entire dataframe
     public ArrayList<Object>[] getData() {
         return new ArrayList[]{colX, colY};
     }
 
+    // EFFECTS: gets header name of x column
     public String getHeaderX() {
         return headerX;
     }
 
+    // EFFECTS: get header name of y column
     public String getHeaderY() {
         return headerY;
     }
 
+    // EFFECTS: gets object type of x column
     public String getTypeX() {
         return typeX;
     }
 
+    // EFFECTS: gets object type of y column
     public String getTypeY() {
         return typeY;
     }

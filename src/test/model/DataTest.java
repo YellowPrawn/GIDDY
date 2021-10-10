@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,15 +17,15 @@ class DataTest {
     Data uniqueHeaderData;
     @BeforeEach
     void runBefore() throws FileNotFoundException {
-        quantitativeData = new Data("src/main/data/quantitativeData.csv");
-        mixedData = new Data("src/main/data/mixedData.csv");
-        mixedData2 = new Data("src/main/data/mixedData2.csv");
-        categoricalData = new Data("src/main/data/categoricalData.csv");
-        uniqueHeaderData = new Data("src/main/data/uniqueHeaderData.csv");
+        quantitativeData = new Data(new Scanner("x,y\n" + "1,10.3\n" + "2,12.7\n" + "3,20.2"));
+        mixedData = new Data(new Scanner("x,y\n" + "1,a\n" + "2,b\n" + "3,c"));
+        mixedData2 = new Data(new Scanner("x,y\n" + "a,1\n" + "b,2\n" + "c,3"));
+        categoricalData = new Data(new Scanner("x,y\n" + "a,d\n" + "b,e\n" + "c,f"));
+        uniqueHeaderData = new Data(new Scanner("foo,bar\n" + "11.7,10.3\n" + "9.2,12.7\n" + "4.8,20.2"));
     }
     @Test
     void testSwapColumns() throws FileNotFoundException {
-        Data unswappedMixedData = new Data("src/main/data/mixedData.csv");
+        Data unswappedMixedData = new Data(new Scanner("x,y\n" + "1,a\n" + "2,b\n" + "3,c"));
         mixedData.swapColumns();
         assertEquals(unswappedMixedData.getColX(), mixedData.getColY());
         assertEquals(unswappedMixedData.getColY(), mixedData.getColX());

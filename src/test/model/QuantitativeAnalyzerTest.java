@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,7 +15,7 @@ public abstract class QuantitativeAnalyzerTest {
 
     @BeforeEach
     public void runBefore() throws FileNotFoundException {
-        data = new Data("src/main/data/quantitativeData.csv");
+        data = new Data(new Scanner("x,y\n" + "1,10.3\n" + "2,12.7\n" + "3,20.2"));
         testFrame = new QuantitativeDataframe(data);
     }
 
