@@ -16,10 +16,8 @@ public class Main {
         System.out.println("(type \":\" on a new line to exit input mode)");
         Scanner scanner = new Scanner(System.in);
         Data data = new Data(scanner);
-        scanner.close();
         if (data.getTypeX().equals("Double") && data.getTypeY().equals("Double")) {
-            getQuantitativeSummary(new QuantitativeDataframe(data));
-
+            getQuantitativeSummary(new QuantitativeDataframe(data), scanner);
         } else {
             MixedDataframe mixedDataframe = new MixedDataframe(data);
             getMixedSummary(new MixedDataframe(data));
@@ -27,7 +25,7 @@ public class Main {
     }
 
     // EFFECTS: prints all summary statistics in dataframe
-    public static void getQuantitativeSummary(QuantitativeDataframe df) {
+    public static void getQuantitativeSummary(QuantitativeDataframe df, Scanner scanner) {
         System.out.println("optimal plot type: Scatterplot");
         System.out.println("mean (x): " + df.getColXMean());
         System.out.println("mean (y): " + df.getColYMean());
@@ -47,10 +45,7 @@ public class Main {
         System.out.println("sum (y): " + df.getColYSum());
         System.out.println("linear regression: " + df.regressionIntercept() + " + " + df.regressionSlope() + " * x");
         System.out.println("enter x value for prediction: ");
-        Scanner parameter = new Scanner(System.in);
-        System.out.println("prediction: " + df.linearRegression(parameter.nextDouble()));
-        parameter.close();
-        // TODO: FIX SCANNER ISSUE
+        System.out.println("prediction: " + df.linearRegression(scanner.nextDouble()));
     }
 
     // EFFECTS: prints all summary statistics in dataframe

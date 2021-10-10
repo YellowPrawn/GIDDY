@@ -36,7 +36,6 @@ public class Data {
             splitData(nextLine, i);
             i++;
         }
-        scanner.close();
     }
 
     // REQUIRES: Scanner object and count
