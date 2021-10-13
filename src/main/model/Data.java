@@ -91,9 +91,13 @@ public class Data {
     // EFFECTS: Swap columns with each other
     protected void swapColumns() {
         ArrayList<Object> temp;
+        String tempType;
         temp = colX;
+        tempType = typeX;
         colX = colY;
+        typeX = typeY;
         colY = temp;
+        typeY = tempType;
     }
 
     // EFFECTS: gets x column of data

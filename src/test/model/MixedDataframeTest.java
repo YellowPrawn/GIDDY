@@ -20,6 +20,11 @@ public class MixedDataframeTest extends QuantitativeAnalyzerTest{
         testMixedFrame = new MixedDataframe(mixedData);
     }
     @Test
+    void testUnorderedColumns() throws FileNotFoundException {
+        assertEquals("String", mixedData.getTypeX());
+        assertEquals("Double", mixedData.getTypeY());
+    }
+    @Test
     void testPreOrderedColumns() throws FileNotFoundException {
         mixedData = new Data(new Scanner("x,y\n" + "a,1.9"));
         testMixedFrame = new MixedDataframe(mixedData);
