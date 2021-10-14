@@ -19,7 +19,7 @@ public class MixedDataframe extends QuantitativeAnalyzer {
     // MODIFIES: this
     // EFFECTS: ensures dataframe is in order {String, Double}
     private void correctColumnOrder() {
-        if (!Objects.equals(data.getTypeX(), "String") || !Objects.equals(data.getTypeY(), "Double")) {
+        if (!Objects.equals(data.getTypeX(), "String")) {
             data.swapColumns();
         }
     }
