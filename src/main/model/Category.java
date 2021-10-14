@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
+// A quantitative nx1 vector
 public class Category {
     private String header;
     private ArrayList<Double> observations = new ArrayList<>();

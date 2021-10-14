@@ -2,10 +2,12 @@ package model;
 
 import java.util.ArrayList;
 
+// Operations for nx2 dataframes which consists of 2 1xn quantitative vectors
 public class QuantitativeDataframe extends QuantitativeAnalyzer {
     protected ArrayList<Double> colX;
     protected ArrayList<Double> colY;
 
+    // REQUIRES: non-zero ArrayList<Double>s in data
     // EFFECTS: sets both column types to double
     public QuantitativeDataframe(Data data) {
         super(data);
@@ -103,6 +105,7 @@ public class QuantitativeDataframe extends QuantitativeAnalyzer {
         return sum(colY);
     }
 
+    // REQUIRES: non-zero ArrayList<Double>
     // EFFECTS: gets standardized score of dataframe
     protected double standardizedScore(double i, ArrayList<Double> col) {
         return i - getMean(col) / getSD(col);

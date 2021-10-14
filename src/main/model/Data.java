@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// An unclassified nx2 dataframe
 public class Data {
     private ArrayList<Object> colX;
     private ArrayList<Object> colY;
@@ -12,9 +13,9 @@ public class Data {
     private String typeX;
     private String typeY;
 
-    // REQUIRES: CSV-like scanner
+    // REQUIRES: CSV-like scanner without empty values or spaces
     // EFFECTS: creates 2 columns, reads a "CSV", and sets data types of both columns
-    public Data(Scanner scanner) throws FileNotFoundException {
+    public Data(Scanner scanner) {
         colX = new ArrayList<>();
         colY = new ArrayList<>();
         readCSV(scanner);
@@ -22,7 +23,7 @@ public class Data {
         setTypeY();
     }
 
-    // REQUIRES: CSV-like scanner
+    // REQUIRES: CSV-like scanner without empty values or spaces
     // EFFECTS: reads CSV scanner into project. Stops input if no new lines exist or line with : is entered
     private void readCSV(Scanner scanner) {
         scanner.useDelimiter(",|\\n");
@@ -37,7 +38,7 @@ public class Data {
         }
     }
 
-    // REQUIRES: Scanner object and count
+    // REQUIRES: Non-empty values, no spaces
     // MODIFIES: this
     // EFFECTS: splits 2 column CSV data into 2 columns and headers
     private void splitData(String data, double i) {

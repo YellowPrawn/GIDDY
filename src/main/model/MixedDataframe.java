@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 
+// Operations for nx2 dataframes which consists of a nx1 categorical vector and a 1xn quantitative vector
 public class MixedDataframe extends QuantitativeAnalyzer {
 
     private final ArrayList<Category> categories = new ArrayList<>();
