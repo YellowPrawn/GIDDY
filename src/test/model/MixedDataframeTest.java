@@ -20,12 +20,12 @@ public class MixedDataframeTest extends QuantitativeAnalyzerTest{
         testMixedFrame = new MixedDataframe(mixedData);
     }
     @Test
-    void testUnorderedColumns() throws FileNotFoundException {
+    void testUnorderedColumns() {
         assertEquals("String", mixedData.getTypeX());
         assertEquals("Double", mixedData.getTypeY());
     }
     @Test
-    void testPreOrderedColumns() throws FileNotFoundException {
+    void testPreOrderedColumns() {
         mixedData = new Data(new Scanner("x,y\n" + "a,1.9"));
         testMixedFrame = new MixedDataframe(mixedData);
         assertEquals("String", mixedData.getTypeX());
@@ -106,7 +106,6 @@ public class MixedDataframeTest extends QuantitativeAnalyzerTest{
     }
     @Test
     void testGetCategories() {
-        ArrayList<Category> expected = new ArrayList<>();
         Category a = new Category("a");
         Category b = new Category("b");
         Category c = new Category("c");
@@ -117,9 +116,6 @@ public class MixedDataframeTest extends QuantitativeAnalyzerTest{
         b.addElement(23.7);
         b.addElement(55.9);
         c.addElement(12.3);
-        expected.add(a);
-        expected.add(b);
-        expected.add(c);
         assertEquals(a.getHeader(), testMixedFrame.getCategories().get(0).getHeader());
         assertEquals(a.getObservation(0), testMixedFrame.getCategories().get(0).getObservation(0));
         assertEquals(a.getObservation(1), testMixedFrame.getCategories().get(0).getObservation(1));

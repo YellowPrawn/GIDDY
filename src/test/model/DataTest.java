@@ -16,7 +16,7 @@ class DataTest {
     Data categoricalData;
     Data uniqueHeaderData;
     @BeforeEach
-    void runBefore() throws FileNotFoundException {
+    void runBefore() {
         quantitativeData = new Data(new Scanner("x,y\n" + "1,10.3\n" + "2,12.7\n" + "3,20.2\n" + ":"));
         mixedData = new Data(new Scanner("x,y\n" + "1,a\n" + "2,b\n" + "3,c"));
         mixedData2 = new Data(new Scanner("x,y\n" + "a,1\n" + "b,2\n" + "c,3"));
@@ -24,12 +24,28 @@ class DataTest {
         uniqueHeaderData = new Data(new Scanner("foo,bar\n" + "11.7,10.3\n" + "9.2,12.7\n" + "4.8,20.2"));
     }
     @Test
-    void testSwapColumns() throws FileNotFoundException {
+    void testReadCSVWithValidPathName() {
+        try {
+            Data testData = new Data("src/main/data/mixedData.csv");
+        } catch (FileNotFoundException e) {
+            fail();
+        }
+    }
+    @Test
+    void testReadCSVWithInvalidPathName() {
+        try {
+            Data testData = new Data("aFakeFile.csv");
+            fail();
+        } catch (FileNotFoundException e) {
+            // expected behaviour
+        }
+    }
+    @Test
+    void testSwapColumns() {
         Data unswappedMixedData = new Data(new Scanner("x,y\n" + "1,a\n" + "2,b\n" + "3,c"));
         mixedData.swapColumns();
         assertEquals(unswappedMixedData.getColX(), mixedData.getColY());
         assertEquals(unswappedMixedData.getColY(), mixedData.getColX());
-
     }
     @Test
     void testGetHeaderX() {

@@ -1,6 +1,5 @@
 package model;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -9,13 +8,15 @@ public class MixedDataframe extends QuantitativeAnalyzer {
 
     private final ArrayList<Category> categories = new ArrayList<>();
 
+    // REQUIRES: A column of Strings and a column of Doubles
     // EFFECTS: organizes data for processing
-    public MixedDataframe(Data data) {
+    public MixedDataframe(Data data) throws ClassCastException {
         super(data);
         correctColumnOrder();
         makeCategories();
         addCategoryData();
     }
+
 
     // MODIFIES: this
     // EFFECTS: ensures dataframe is in order {String, Double}
@@ -37,7 +38,7 @@ public class MixedDataframe extends QuantitativeAnalyzer {
 
     // MODIFIES: this
     // EFFECTS: adds each observation to corresponding category
-    private void addCategoryData() {
+    private void addCategoryData() throws ClassCastException {
         for (int i = 0; i < data.getColX().size(); i++) {
             for (Category c : categories) {
                 if (c.getHeader().equals(data.getColX().get(i))) {

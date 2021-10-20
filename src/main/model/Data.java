@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -23,6 +24,16 @@ public class Data {
         setTypeY();
     }
 
+    // REQUIRES: name of CSV file without empty values or spaces
+    // EFFECTS: creates 2 columns, reads a "CSV", and sets data types of both columns
+    public Data(String path) throws FileNotFoundException {
+        colX = new ArrayList<>();
+        colY = new ArrayList<>();
+        readCSV(path);
+        setTypeX();
+        setTypeY();
+    }
+
     // REQUIRES: CSV-like scanner without empty values or spaces
     // EFFECTS: reads CSV scanner into project. Stops input if no new lines exist or line with : is entered
     private void readCSV(Scanner scanner) {
@@ -36,6 +47,19 @@ public class Data {
             splitData(nextLine, i);
             i++;
         }
+    }
+
+    // REQUIRES: existing CSV file
+    // EFFECTS: reads CSV file into project
+    private void readCSV(String path) throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File(path));
+        scanner.useDelimiter(",|\\n");
+        double i = 0;
+        while (scanner.hasNext()) {
+            splitData(scanner.next(), i);
+            i++;
+        }
+        scanner.close();
     }
 
     // REQUIRES: Non-empty values, no spaces
