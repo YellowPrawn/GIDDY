@@ -2,8 +2,10 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import persistence.JsonReader;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -22,23 +24,6 @@ class DataTest {
         mixedData2 = new Data(new Scanner("x,y\n" + "a,1\n" + "b,2\n" + "c,3"));
         categoricalData = new Data(new Scanner("x,y\n" + "a,d\n" + "b,e\n" + "c,f"));
         uniqueHeaderData = new Data(new Scanner("foo,bar\n" + "11.7,10.3\n" + "9.2,12.7\n" + "4.8,20.2"));
-    }
-    @Test
-    void testReadCSVWithValidPathName() {
-        try {
-            Data testData = new Data("src/main/data/mixedData.csv");
-        } catch (FileNotFoundException e) {
-            fail();
-        }
-    }
-    @Test
-    void testReadCSVWithInvalidPathName() {
-        try {
-            Data testData = new Data("aFakeFile.csv");
-            fail();
-        } catch (FileNotFoundException e) {
-            // expected behaviour
-        }
     }
     @Test
     void testSwapColumns() {

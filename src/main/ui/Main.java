@@ -10,6 +10,8 @@ import model.Category;
 import model.Data;
 import model.MixedDataframe;
 import model.QuantitativeDataframe;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -37,7 +39,8 @@ public class Main {
     public static void read(Scanner scanner) throws IOException {
         System.out.println("enter file name");
         try {
-            Data data = new Data("src/main/data/" + scanner.nextLine() + ".csv");
+            JsonReader reader = new JsonReader("src/main/data/" + scanner.nextLine() + ".csv");
+            Data data = reader.read();
             processData(data, scanner);
             System.exit(0);
         } catch (FileNotFoundException e) {
@@ -56,19 +59,17 @@ public class Main {
         saveData(data, scanner);
     }
 
-    // REQUIRES: Existing, non-empty, Data object
+    // REQUIRES: non-empty Data object
     // EFFECTS: Saves raw data written by user into csv file. If selection is invalid, restart this function
     public static void saveData(Data data, Scanner scanner) throws IOException {
         System.out.println("\nsave raw data to system?: \n (y) yes\n (n) no");
         switch (scanner.nextLine()) {
             case "y":
                 System.out.println("enter file name:");
-                FileWriter fileWriter = new FileWriter("src/main/data/" + scanner.nextLine() + ".csv");
-                fileWriter.write(data.getHeaderX() + "," + data.getHeaderY() + "\n");
-                for (int i = 0; i < data.getColX().size(); i++) {
-                    fileWriter.append(data.getColX().get(i) + "," + data.getColY().get(i) + "\n");
-                }
-                fileWriter.close();
+                JsonWriter writer = new JsonWriter("src/main/data/" + scanner.nextLine() + ".json");
+                writer.open();
+                writer.write(data);
+                writer.close();
                 System.exit(0);
             case "n":
                 System.out.println("ending program...");
@@ -79,7 +80,7 @@ public class Main {
         }
     }
 
-    // REQUIRES: Existing, non-empty, Data object with 2 Double columns or a String column + Double column
+    // REQUIRES: non-empty Data object with 2 Double columns or a String column + Double column
     // EFFECTS: processes data into correct outputs. If data is incompatible, restart program
     public static void processData(Data data, Scanner scanner) throws IOException {
         try {
@@ -95,7 +96,7 @@ public class Main {
         }
     }
 
-    // REQUIRES: Existing, non-empty, Data object
+    // REQUIRES: non-empty Data object
     // EFFECTS: prints all summary statistics in dataframe
     public static void getQuantitativeSummary(QuantitativeDataframe df, Scanner scanner) {
         System.out.println("optimal plot type: Scatterplot");
@@ -120,7 +121,7 @@ public class Main {
         System.out.println("prediction: " + df.linearRegression(scanner.nextDouble()));
     }
 
-    // REQUIRES: Existing, non-empty, Data object
+    // REQUIRES: Enon-empty Data object
     // EFFECTS: prints all summary statistics in dataframe then exits program
     public static void getMixedSummary(MixedDataframe df) {
         System.out.println("optimal plot type: boxplot");

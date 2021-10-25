@@ -1,12 +1,16 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 // An unclassified nx2 dataframe
-public class Data {
+public class Data implements Writable {
     private ArrayList<Object> colX;
     private ArrayList<Object> colY;
     private String headerX;
@@ -26,15 +30,16 @@ public class Data {
 
     // REQUIRES: name of CSV file without empty values or spaces
     // EFFECTS: creates 2 columns, reads a "CSV", and sets data types of both columns
-    public Data(String path) throws FileNotFoundException {
+    public Data(ArrayList<String> rawData) {
         colX = new ArrayList<>();
         colY = new ArrayList<>();
-        readCSV(path);
+        readCSV(rawData);
         setTypeX();
         setTypeY();
     }
 
     // REQUIRES: CSV-like scanner without empty values or spaces
+    // MODIFIES: this
     // EFFECTS: reads CSV scanner into project. Stops input if no new lines exist or line with : is entered
     private void readCSV(Scanner scanner) {
         scanner.useDelimiter(",|\\n");
@@ -49,17 +54,21 @@ public class Data {
         }
     }
 
-    // REQUIRES: existing CSV file
-    // EFFECTS: reads CSV file into project
-    private void readCSV(String path) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(path));
-        scanner.useDelimiter(",|\\n");
+    // REQUIRES: CSV-like ArrayList<String> without empty values or spaces
+    // MODIFIES: this
+    // EFFECTS: reads CSV-like ArrayList<String> into project.
+    private void readCSV(ArrayList<String> rawData) {
+        ArrayList<String> data = new ArrayList<>();
+        for (String s : rawData) {
+            String[] row = s.split(",|\\n");
+            data.add(row[0]);
+            data.add(row[1]);
+        }
         double i = 0;
-        while (scanner.hasNext()) {
-            splitData(scanner.next(), i);
+        for (String s : data) {
+            splitData(s, i);
             i++;
         }
-        scanner.close();
     }
 
     // REQUIRES: Non-empty values, no spaces
@@ -158,5 +167,22 @@ public class Data {
     // EFFECTS: gets object type of y column
     public String getTypeY() {
         return typeY;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("header", getHeaderX() + "," + getHeaderY() + "\n");
+        json.put("row", rowsToJson());
+        return json;
+    }
+
+    // EFFECTS: returns columns in this dataset as a JSON array
+    private JSONArray rowsToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < getColX().size(); i++) {
+            jsonArray.put(getColX().get(i) + "," + getColY().get(i) + "\n");
+        }
+        return jsonArray;
     }
 }

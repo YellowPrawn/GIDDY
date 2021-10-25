@@ -18,3 +18,5 @@ I chose to pursue this project as a statistics student who feels that obtaining 
 - As a user, I want to be able to know what plot is the best for my data
 - As a user, I want to be able to predict data points using linear regression
 - As a user, I want to be able to have n categories in my dataset and find summary statistics for each of them
+- As a user, I want to be able to read a preexisting dataset from file
+- As a user, I want to be able to read a preexisting dataset to file
