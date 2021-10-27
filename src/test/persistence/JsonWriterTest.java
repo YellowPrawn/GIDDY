@@ -13,13 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JsonWriterTest extends JsonTest {
     ArrayList<String> testData;
-    @BeforeEach
-    void runBefore() {
-        testData = new ArrayList<>();
-        testData.add("x,y");
-        testData.add("1,2");
-        testData.add("3,4");
-    }
+
     @Test
     void testWriterInvalidFile() {
         try {
@@ -44,22 +38,53 @@ class JsonWriterTest extends JsonTest {
     }
 
     @Test
-    void testWriterGeneralData() {
+    void testWriterQuantitativeData() {
         try {
+            testData = new ArrayList<>();
+            testData.add("x,y");
+            testData.add("1.0,2.0");
+            testData.add("3.0,4.0");
+
             Data data = new Data(testData);
-            JsonWriter writer = new JsonWriter("./data/testWriterGeneralData.json");
+            JsonWriter writer = new JsonWriter("./data/testWriterQuantitativeData.json");
             writer.open();
             writer.write(data);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/testWriterGeneralData.json");
+            JsonReader reader = new JsonReader("./data/testWriterQuantitativeData.json");
             data = reader.read();
             assertEquals("x", data.getHeaderX());
             assertEquals("y", data.getHeaderY());
             assertEquals(2, data.getColX().size());
             assertEquals(2, data.getColY().size());
-            checkObservations(new double[]{1,2}, data, 0);
-            checkObservations(new double[]{3,4}, data, 1);
+            checkObservations(new Object[]{1.0,2.0}, data, 0);
+            checkObservations(new Object[]{3.0,4.0}, data, 1);
+        } catch (IOException e) {
+            fail("Exception should not have been thrown");
+        }
+    }
+    @Test
+    void testWriterMixedData() {
+        try {
+            testData = new ArrayList<>();
+            testData.add("x,y");
+            testData.add("a,2.0");
+            testData.add("b,4.0");
+
+            Data data = new Data(testData);
+            JsonWriter writer = new JsonWriter("./data/testWriterMixedData.json");
+            writer.open();
+            writer.write(data);
+            writer.close();
+
+            JsonReader reader = new JsonReader("./data/testWriterMixedData.json");
+            data = reader.read();
+            assertEquals("x", data.getHeaderX());
+            assertEquals("y", data.getHeaderY());
+            assertEquals(2, data.getColX().size());
+            assertEquals(2, data.getColY().size());
+            checkObservations(new Object[]{"a",2.0}, data, 0);
+            checkObservations(new Object[]{"b",4.0}, data, 1);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }
