@@ -39,7 +39,7 @@ public class Main {
     public static void read(Scanner scanner) throws IOException {
         System.out.println("enter file name");
         try {
-            JsonReader reader = new JsonReader("src/main/data/" + scanner.nextLine() + ".csv");
+            JsonReader reader = new JsonReader("src/main/data/" + scanner.nextLine() + ".json");
             Data data = reader.read();
             processData(data, scanner);
             System.exit(0);
