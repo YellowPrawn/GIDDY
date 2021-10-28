@@ -36,6 +36,7 @@ class JsonReaderTest extends JsonTest {
             fail("Couldn't read from file");
         }
     }
+    @Test
     void testReaderMixedData() {
         JsonReader reader = new JsonReader("src/main/data/testReaderMixedData.json");
         try {
