@@ -169,6 +169,7 @@ public class Data implements Writable {
         return typeY;
     }
 
+    // Modelled off the toJson method found in the JsonSerializationDemo repository
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -177,6 +178,7 @@ public class Data implements Writable {
         return json;
     }
 
+    // Modelled off the thingiesToJson method found in the JsonSerializationDemo repository
     // EFFECTS: returns columns in this dataset as a JSON array
     private JSONArray rowsToJson() {
         JSONArray jsonArray = new JSONArray();

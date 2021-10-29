@@ -1,19 +1,18 @@
 package persistence;
 
-import model.Category;
 import model.Data;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// This class is modelled off the JsonWriterTest class found in the JsonSerializationDemo repository
 class JsonWriterTest extends JsonTest {
     ArrayList<String> testData;
 
+    // This class is modelled off the testWriterInvalidFile class found in the JsonSerializationDemo repository
     @Test
     void testWriterInvalidFile() {
         try {
@@ -25,6 +24,7 @@ class JsonWriterTest extends JsonTest {
         }
     }
 
+    // This class is modelled off the testWriterEmptyWorkroom class found in the JsonSerializationDemo repository
     @Test
     void testWriterEmptyData() {
         try {
@@ -37,6 +37,7 @@ class JsonWriterTest extends JsonTest {
         }
     }
 
+    // This class is modelled off the testWriterGeneralWorkroom class found in the JsonSerializationDemo repository
     @Test
     void testWriterQuantitativeData() {
         try {
@@ -63,6 +64,8 @@ class JsonWriterTest extends JsonTest {
             fail("Exception should not have been thrown");
         }
     }
+
+    // This class is modelled off the testWriterGeneralWorkroom class found in the JsonSerializationDemo repository
     @Test
     void testWriterMixedData() {
         try {

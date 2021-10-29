@@ -4,12 +4,13 @@ import model.Data;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// This class is modelled off the JsonReaderTest class found in the JsonSerializationDemo repository
 class JsonReaderTest extends JsonTest {
 
+    // Modelled off the testReaderNonExistentFile test found in the JsonSerializationDemo repository
     @Test
     void testReaderNonExistentFile() {
         JsonReader reader = new JsonReader("src/main/data/noSuchFile.json");
@@ -21,6 +22,7 @@ class JsonReaderTest extends JsonTest {
         }
     }
 
+    // Modelled off the testReaderGeneralWorkroom test found in the JsonSerializationDemo repository
     @Test
     void testReaderQuantitativeData() {
         JsonReader reader = new JsonReader("src/main/data/testReaderQuantitativeData.json");
@@ -36,6 +38,7 @@ class JsonReaderTest extends JsonTest {
             fail("Couldn't read from file");
         }
     }
+    // Modelled off the testReaderGeneralWorkroom test found in the JsonSerializationDemo repository
     @Test
     void testReaderMixedData() {
         JsonReader reader = new JsonReader("src/main/data/testReaderMixedData.json");
