@@ -15,6 +15,16 @@ public class QuantitativeDataframe extends QuantitativeAnalyzer {
         colY = toDouble(data.getColY());
     }
 
+    // EFFECTS: gets colX
+    public ArrayList<Double> getColX() {
+        return colX;
+    }
+
+    // EFFECTS: gets colY
+    public ArrayList<Double> getColY() {
+        return colY;
+    }
+
     // EFFECTS: gets mean of column x
     public double getColXMean() {
         return getMean(colX);

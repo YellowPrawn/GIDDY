@@ -15,7 +15,7 @@ public abstract class QuantitativeAnalyzerTest {
 
     @BeforeEach
     public void runBefore() throws FileNotFoundException {
-        data = new Data(new Scanner("x,y\n" + "1,10.3\n" + "2,12.7\n" + "3,20.2"));
+        data = new Data("x,y\n" + "1,10.3\n" + "2,12.7\n" + "3,20.2");
         testFrame = new QuantitativeDataframe(data);
     }
 

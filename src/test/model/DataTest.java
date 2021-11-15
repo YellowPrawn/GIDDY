@@ -19,15 +19,15 @@ class DataTest {
     Data uniqueHeaderData;
     @BeforeEach
     void runBefore() {
-        quantitativeData = new Data(new Scanner("x,y\n" + "1,10.3\n" + "2,12.7\n" + "3,20.2\n" + ":"));
-        mixedData = new Data(new Scanner("x,y\n" + "1,a\n" + "2,b\n" + "3,c"));
-        mixedData2 = new Data(new Scanner("x,y\n" + "a,1\n" + "b,2\n" + "c,3"));
-        categoricalData = new Data(new Scanner("x,y\n" + "a,d\n" + "b,e\n" + "c,f"));
-        uniqueHeaderData = new Data(new Scanner("foo,bar\n" + "11.7,10.3\n" + "9.2,12.7\n" + "4.8,20.2"));
+        quantitativeData = new Data("x,y\n" + "1,10.3\n" + "2,12.7\n" + "3,20.2\n" + ":");
+        mixedData = new Data("x,y\n" + "1,a\n" + "2,b\n" + "3,c");
+        mixedData2 = new Data("x,y\n" + "a,1\n" + "b,2\n" + "c,3");
+        categoricalData = new Data("x,y\n" + "a,d\n" + "b,e\n" + "c,f");
+        uniqueHeaderData = new Data("foo,bar\n" + "11.7,10.3\n" + "9.2,12.7\n" + "4.8,20.2");
     }
     @Test
     void testSwapColumns() {
-        Data unswappedMixedData = new Data(new Scanner("x,y\n" + "1,a\n" + "2,b\n" + "3,c"));
+        Data unswappedMixedData = new Data("x,y\n" + "1,a\n" + "2,b\n" + "3,c");
         mixedData.swapColumns();
         assertEquals(unswappedMixedData.getColX(), mixedData.getColY());
         assertEquals(unswappedMixedData.getColY(), mixedData.getColX());

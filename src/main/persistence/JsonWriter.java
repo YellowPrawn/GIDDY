@@ -13,7 +13,7 @@ public class JsonWriter {
     private PrintWriter writer;
     private String destination;
 
-    // Modelled off the JsonWrtier method found in the JsonSerializationDemo repository
+    // Modelled off the JsonWriter method found in the JsonSerializationDemo repository
     // EFFECTS: constructs writer to write to destination file
     public JsonWriter(String destination) {
         this.destination = destination;

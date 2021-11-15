@@ -16,9 +16,10 @@ public class MixedDataframeTest extends QuantitativeAnalyzerTest{
     @BeforeEach
     public void runBefore() throws FileNotFoundException {
         super.runBefore();
-        mixedData = new Data(new Scanner("x,y\n" + "1.7,a\n" + "33.2,b\n" + "24.3,a\n" + "23.7,b\n" + "12.3,c\n" + "55.9,b\n" + "9.3,a"));
+        mixedData = new Data("x,y\n" + "1.7,a\n" + "33.2,b\n" + "24.3,a\n" + "23.7,b\n" + "12.3,c\n" + "55.9,b\n" + "9.3,a");
         testMixedFrame = new MixedDataframe(mixedData);
     }
+
     @Test
     void testUnorderedColumns() {
         assertEquals("String", mixedData.getTypeX());
@@ -26,7 +27,7 @@ public class MixedDataframeTest extends QuantitativeAnalyzerTest{
     }
     @Test
     void testPreOrderedColumns() {
-        mixedData = new Data(new Scanner("x,y\n" + "a,1.9"));
+        mixedData = new Data("x,y\n" + "a,1.9");
         testMixedFrame = new MixedDataframe(mixedData);
         assertEquals("String", mixedData.getTypeX());
         assertEquals("Double", mixedData.getTypeY());

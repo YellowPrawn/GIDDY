@@ -20,10 +20,10 @@ public class Data implements Writable {
 
     // REQUIRES: CSV-like scanner without empty values or spaces
     // EFFECTS: creates 2 columns, reads a "CSV", and sets data types of both columns
-    public Data(Scanner scanner) {
+    public Data(String rawData) {
         colX = new ArrayList<>();
         colY = new ArrayList<>();
-        readCSV(scanner);
+        splitString(rawData);
         setTypeX();
         setTypeY();
     }
@@ -39,19 +39,14 @@ public class Data implements Writable {
     }
 
     // REQUIRES: CSV-like scanner without empty values or spaces
-    // MODIFIES: this
-    // EFFECTS: reads CSV scanner into project. Stops input if no new lines exist or line with : is entered
-    private void readCSV(Scanner scanner) {
-        scanner.useDelimiter(",|\\n");
-        double i = 0;
-        while (scanner.hasNext()) {
-            String nextLine = scanner.next();
-            if (nextLine.contains(":")) {
-                break;
-            }
-            splitData(nextLine, i);
-            i++;
+    // EFFECTS: reads CSV string into individual rows.
+    private void splitString(String rawData) {
+        String[] splitString = rawData.split(",|\\n");
+        ArrayList<String> data = new ArrayList<>();
+        for (int i = 0; i < splitString.length / 2; i++) {
+            data.add(splitString[2 * i] + "," + splitString[2 * i + 1]);
         }
+        readCSV(data);
     }
 
     // REQUIRES: CSV-like ArrayList<String> without empty values or spaces

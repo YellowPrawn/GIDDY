@@ -1,9 +1,28 @@
 package model;
 
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class QuantitativeDataframeTest extends QuantitativeAnalyzerTest {
+    @Test
+    void testGetColX() {
+        ArrayList<Double> expected = new ArrayList<>();
+        expected.add(1.0);
+        expected.add(2.0);
+        expected.add(3.0);
+        assertEquals(expected, testFrame.getColX());
+    }
+    @Test
+    void testGetColY() {
+        ArrayList<Double> expected = new ArrayList<>();
+        expected.add(10.3);
+        expected.add(12.7);
+        expected.add(20.2);
+        assertEquals(expected, testFrame.getColY());
+    }
     @Test
     void testGetColXMean(){
         assertEquals(2,testFrame.getColXMean());
