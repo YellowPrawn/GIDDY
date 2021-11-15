@@ -1,0 +1,10 @@
+{
+    "header": "foo, bar\n",
+    "row": [
+        "cat,15.0\n",
+        "dog,14.0\n",
+        "horse,75.0\n",
+        "turtle,190.0\n",
+        "cat,20.0\n"
+    ]
+}
