@@ -1,13 +1,9 @@
 package ui;
 
 import java.awt.*;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
-import model.Category;
 import model.Data;
-import model.MixedDataframe;
 import model.QuantitativeDataframe;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -17,26 +13,22 @@ import javax.swing.*;
 public class Main extends JFrame {
     public static final int WIDTH = 1000;
     public static final int HEIGHT = 700;
-    JButton b1;
-    JButton b2;
-    JLabel text;
-    JLabel error;
 
     JButton readButton;
     JButton writeButton;
     JButton fileSearchButton;
     JButton saveButton;
     JButton predictionEntryButton;
+    JButton writeFileButton;
 
     JLabel selectMode;
     JLabel fileName;
-    JLabel fileNotFoundError;
-    JLabel fileNameEntryText;
-    JLabel incompatibleDataframeError;
+    JLabel dataEntryText;
     JLabel predictionEntryText;
 
     JTextField fileSearchField;
     JTextField saveFileField;
+    JTextField writeFileField;
     JTextField predictionEntryField;
 
     JPanel ui;
@@ -58,6 +50,7 @@ public class Main extends JFrame {
     public Main() {
         super("GIDDY");
         cardLayout = new CardLayout();
+        cardLayout.minimumLayoutSize(this);
         initializeGraphics();
     }
 
@@ -84,8 +77,7 @@ public class Main extends JFrame {
     public void initiateBackdrop() {
         ui = new JPanel();
         ui.setLayout(cardLayout);
-        ui.setSize(new Dimension(0, 0));
-        add(ui, BorderLayout.SOUTH);
+        add(ui, null);
     }
 
     // MODIFIES: this
@@ -94,8 +86,19 @@ public class Main extends JFrame {
         readButton = new JButton("read existing file");
         writeButton = new JButton("write new data");
         fileSearchButton = new JButton("search");
+        writeFileButton = new JButton("submit");
         saveButton = new JButton("save");
         predictionEntryButton = new JButton("predict");
+
+        // panels with 2 buttons
+        readButton.setBounds(WIDTH * 3 / 4, 0, WIDTH / 5, HEIGHT / 10);
+        writeButton.setBounds(WIDTH / 2, 0, WIDTH / 5, HEIGHT / 10);
+
+        // panels with single buttons
+        fileSearchButton.setBounds(WIDTH * 3 / 4, 0, WIDTH / 5, HEIGHT / 10);
+        writeFileButton.setBounds(WIDTH * 3 / 4, 0, WIDTH / 5, HEIGHT / 10);
+        saveButton.setBounds(WIDTH * 3 / 4, 0, WIDTH / 5, HEIGHT / 10);
+        predictionEntryButton.setBounds(WIDTH * 3 / 4, 0, WIDTH / 5, HEIGHT / 10);
     }
 
     // MODIFIES: this
@@ -103,10 +106,13 @@ public class Main extends JFrame {
     public void initiateLabels() {
         selectMode = new JLabel("select mode:", SwingConstants.CENTER);
         fileName = new JLabel("enter file name", SwingConstants.CENTER);
-        fileNotFoundError = new JLabel("file not found. Try again");
-        fileNameEntryText = new JLabel("enter data: (separated with commas)");
-        incompatibleDataframeError = new JLabel("incompatible dataframe entered. Try again\n");
+        dataEntryText = new JLabel("enter data: (separated with commas)");
         predictionEntryText = new JLabel("enter x value for prediction: ");
+
+        selectMode.setBounds(WIDTH / 4, 0, WIDTH / 5, HEIGHT / 10);
+        fileName.setBounds(WIDTH / 4, 0, WIDTH / 5, HEIGHT / 10);
+        dataEntryText.setBounds(WIDTH / 4, 0, WIDTH / 5, HEIGHT / 10);
+        predictionEntryText.setBounds(WIDTH / 4, 0, WIDTH / 5, HEIGHT / 10);
     }
 
     // MODIFIES: this
@@ -114,7 +120,13 @@ public class Main extends JFrame {
     public void initiateFields() {
         fileSearchField = new JTextField(20);
         saveFileField = new JTextField(20);
+        writeFileField = new JTextField(20);
         predictionEntryField = new JTextField(20);
+
+        fileSearchField.setBounds(WIDTH / 2, 0, WIDTH / 5, HEIGHT / 10);
+        saveFileField.setBounds(WIDTH / 2, 0, WIDTH / 5, HEIGHT / 10);
+        writeFileField.setBounds(WIDTH / 2, 0, WIDTH / 5, HEIGHT / 10);
+        predictionEntryField.setBounds(WIDTH / 2, 0, WIDTH / 5, HEIGHT / 10);
     }
 
     // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage
@@ -128,9 +140,10 @@ public class Main extends JFrame {
 
         initiateStartPage();
         initiateReadPage();
+        initiateWritePage();
     }
 
-    // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage
+    // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage, readButton, writeButton
     // EFFECTS: sets up functionality for startPage
     public void initiateStartPage() {
         ui.add(startPage, "startPage");
@@ -139,99 +152,107 @@ public class Main extends JFrame {
         startPage.add(writeButton);
 
         readButton.addActionListener(e -> read());
-
         writeButton.addActionListener(e -> write());
     }
 
-    // MODIFIES: this, ui, readPage, mixedDataPage, QuantitativeDataPage
+    // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage, fileSearchButton
     // EFFECTS: sets up functionality for startPage
     public void initiateReadPage() {
         ui.add(readPage, "readPage");
         readPage.add(fileName);
         readPage.add(fileSearchField);
         readPage.add(fileSearchButton);
-
         fileSearchButton.addActionListener(e -> {
             try {
-                JsonReader reader = new JsonReader("src/main/data/" + field.getText() + ".json");
+                JsonReader reader = new JsonReader("src/main/data/" + fileSearchField.getText() + ".json");
                 Data data = reader.read();
                 processData(data);
             } catch (IOException exception) {
-                readPage.remove(fileNotFoundError);
-                readPage.add(fileNotFoundError);
-                read();
+                fileName.setText("file not found. Try again");
             }
         });
     }
 
-    // MODIFIES: this, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage
+    // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage, writeFileButton
+    // EFFECTS: sets up functionality for writePage
+    public void initiateWritePage() {
+        ui.add(writePage,"writePage");
+        writePage.add(dataEntryText);
+        writePage.add(writeFileField);
+        writePage.add(writeFileButton);
+
+        writeFileButton.addActionListener(e -> {
+            Data data = new Data(writeFileField.getText());
+            processData(data);
+            //saveData(data);
+        });
+    }
+
+
+    // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage, cardLayout
     // EFFECTS: Allows user to choose between reading existing data or to input data manually.
     public void selectMode() {
         cardLayout.show(ui, "startPage");
     }
 
     // REQUIRES: valid csv file name in ../data/
-    // MODIFIES: this, ui, readPage, mixedDataPage, QuantitativeDataPage
+    // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage, cardLayout, fileName
     // EFFECTS:  reads existing file in ../data/ and loads it into program
     public void read() {
+        fileName.setText("enter file name");
         cardLayout.show(ui, "readPage");
     }
 
     // REQUIRES: valid CSV-like data
+    // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage, cardLayout
     // EFFECT: allows user to input data in CSV format and loads it into program
     public void write() {
-        text = new JLabel("enter data: (separated with commas)");
-        field = new JTextField();
-        b1 = new JButton("search");
-        b1.addActionListener(e -> {
-            Data data = new Data(field.getText());
-            resetComponents();
-            processData(data);
-            saveData(data);
-        });
-        ui.add(text);
-        ui.add(field);
-        ui.add(b1);
-    }
-
-    // REQUIRES: non-empty Data object
-    // EFFECTS: Saves raw data written by user into csv file. If selection is invalid, restart this function
-    public void saveData(Data data) {
-        b1 = new JButton("save raw data");
-        b1.addActionListener(e -> {
-            resetComponents();
-            text = new JLabel("enter file name:");
-            field = new JTextField();
-            b1 = new JButton("save");
-            b1.addActionListener(e2 -> {
-                JsonWriter writer = new JsonWriter("src/main/data/" + field.getText() + ".json");
-                try {
-                    writer.open();
-                } catch (FileNotFoundException ex) {
-                    ex.printStackTrace();
-                }
-                writer.write(data);
-                writer.close();
-            });
-            ui.add(text);
-            ui.add(field);
-            ui.add(b1);
-        });
-        ui.add(b1);
+        cardLayout.show(ui, "writePage");
     }
 
     // REQUIRES: non-empty Data object with 2 Double columns or a String column + Double column
+    // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage
     // EFFECTS: processes data into correct outputs. If data is incompatible, restart program
     public void processData(Data data) {
+
         try {
             Graph graph = new Graph(data, WIDTH, HEIGHT);
-            ui.add(graph);
+            ui.add(graph, "results");
+            cardLayout.show(ui, "results");
+            repaint();
         } catch (ClassCastException e) {
-            error = new JLabel("incompatible dataframe entered. Try again\n");
-            ui.add(error);
+            predictionEntryText.setText("incompatible dataframe entered. Try again\n");
             selectMode();
         }
     }
+
+    // REQUIRES: non-empty Data object
+    // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage
+    // EFFECTS: Saves raw data written by user into csv file. If selection is invalid, restart this function
+//    public void saveData(Data data) {
+//        // TODO: turn this into optional overlay
+//        b1 = new JButton("save raw data");
+//        b1.addActionListener(e -> {
+//            resetComponents();
+//            text = new JLabel("enter file name:");
+//            field = new JTextField();
+//            b1 = new JButton("save");
+//            b1.addActionListener(e2 -> {
+//                JsonWriter writer = new JsonWriter("src/main/data/" + field.getText() + ".json");
+//                try {
+//                    writer.open();
+//                } catch (FileNotFoundException ex) {
+//                    ex.printStackTrace();
+//                }
+//                writer.write(data);
+//                writer.close();
+//            });
+//            ui.add(text);
+//            ui.add(field);
+//            ui.add(b1);
+//        });
+//        ui.add(b1);
+//    }
 
     // REQUIRES: non-empty Data object
     // EFFECTS: prints all summary statistics in dataframe
@@ -256,39 +277,5 @@ public class Main extends JFrame {
         System.out.println("linear regression: " + df.regressionIntercept() + " + " + df.regressionSlope() + " * x");
         System.out.println("enter x value for prediction: ");
         //System.out.println("prediction: " + df.linearRegression(scanner.nextDouble()));
-    }
-
-    // REQUIRES: Enon-empty Data object
-    // EFFECTS: prints all summary statistics in dataframe then exits program
-    public static void getMixedSummary(MixedDataframe df) {
-        System.out.println("optimal plot type: boxplot");
-        System.out.println("data is mapped according to the following order: ");
-        ArrayList<String> headers = new ArrayList<>();
-        for (Category c : df.getCategories()) {
-            headers.add(c.getHeader());
-        }
-        System.out.println(headers + "\n");
-        System.out.println("means: " + df.getMeans());
-        System.out.println("medians: " + df.getMedians());
-        System.out.println("1st quartiles: " + df.get1QRs());
-        System.out.println("3rd quartiles: " + df.get3QRs());
-        System.out.println("interquartile ranges: " + df.getIQRs());
-        System.out.println("minima: " + df.minima());
-        System.out.println("maxima: " + df.maxima());
-        System.out.println("sums: " + df.sums());
-    }
-
-    // MODIFIES: this
-    // EFFECTS: resets all JFrame components in screen
-    public void resetComponents() {
-        try {
-            b1.setVisible(false);
-            b2.setVisible(false);
-            text.setVisible(false);
-            error.setVisible(false);
-            field.setVisible(false);
-        } catch (NullPointerException e) {
-            // expected behavior when component isn't initialized
-        }
     }
 }
