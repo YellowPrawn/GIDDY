@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static java.lang.Math.abs;
+
 // Graphical representation of dataframe
 public class Graph extends JPanel {
     int screenWidth;
@@ -22,19 +24,42 @@ public class Graph extends JPanel {
     int labelScale;
     double dfMaxX;
     double dfMaxY;
+    Main main;
 
     // MODIFIES: this
     // EFFECTS: instantiates graph fields and scaling variables
-    public Graph(Data data, int screenWidth, int screenHeight) throws ClassCastException {
+    public Graph(Data data, int screenWidth, int screenHeight, Main main) throws ClassCastException {
         setSize(screenWidth, screenHeight);
+        setLayout(null);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.data = data;
+        this.main = main;
         originX = screenWidth / 10;
         originY = screenHeight - screenHeight / 8;
         maxX = screenWidth - screenWidth / 10;
         maxY = screenHeight / 10;
         labelScale = screenHeight / 75;
+        drawHeaders();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: draws axis headers
+    private void drawHeaders() {
+        JLabel headerX = new JLabel(data.getHeaderX());
+        JLabel headerY = new JLabel(data.getHeaderY());
+
+        headerX.setBounds(maxX + screenWidth / 25,
+                originY + 2 * labelScale,
+                screenWidth / (labelScale * 2),
+                labelScale * 3 / 2);
+        headerY.setBounds(originX - 4 * labelScale,
+                maxY - screenHeight / 25,
+                screenWidth / (labelScale * 2),
+                labelScale * 3 / 2);
+
+        add(headerX);
+        add(headerY);
     }
 
     // MODIFIES: this
@@ -45,6 +70,9 @@ public class Graph extends JPanel {
         drawAxes(g);
         if (data.getTypeX().equals("Double") && data.getTypeY().equals("Double")) {
             getQuantitativeGraph(new QuantitativeDataframe(data), g);
+            main.predictionEntryText.setVisible(true);
+            main.predictionEntryField.setVisible(true);
+            main.predictionEntryButton.setVisible(true);
         } else {
             getMixedGraph(new MixedDataframe(data), g);
         }
@@ -52,8 +80,82 @@ public class Graph extends JPanel {
     }
 
     // MODIFIES: this
+    // EFFECTS: creates graph for quantitative data
+    private void getQuantitativeGraph(QuantitativeDataframe df, Graphics g) {
+        dfMaxX = df.getColXMax();
+        dfMaxY = df.getColYMax();
+        drawScatterPoints(df, g);
+        drawQuantitativeXLabels(g);
+        predictionOverlay(df, g);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates axes lines
+    private void drawAxes(Graphics g) {
+        g.drawLine(originX, originY, maxX + screenWidth / 25, originY);
+        g.drawLine(originX, originY, originX, maxY - screenHeight / 25);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates labels for a dataframe's y axis
+    private void drawYLabels(Graphics g) {
+        for (int i = labels; i >= 0; i--) {
+            // scaling by 100 then dividing by 100 prevents unintended rounding of small values
+            double labelLegend = ((100 * i / labels) * dfMaxY) / 100;
+            int labelY = scaleY(labelLegend);
+            g.drawLine(originX,
+                    labelY,
+                    originX - labelScale,
+                    labelY);
+
+            JLabel legend = new JLabel(String.valueOf(labelLegend));
+            legend.setBounds(originX - 4 * labelScale,
+                    labelY - labelScale,
+                    screenWidth / (labelScale * 2),
+                    labelScale * 3 / 2);
+            add(legend);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: draws labels for quantitative dataframes' x axis
+    private void drawQuantitativeXLabels(Graphics g) {
+        for (int i = 0; i <= labels; i++) {
+            double labelLegend = ((100 * i / labels) * dfMaxX) / 100;
+            int labelX = scaleX(labelLegend);
+            g.drawLine(labelX,
+                    originY,
+                    labelX,
+                    originY + labelScale);
+
+            JLabel legend = new JLabel(String.valueOf(labelLegend));
+            legend.setBounds(labelX,
+                    originY + 2 * labelScale,
+                    screenWidth / (labelScale * 2),
+                    labelScale * 3 / 2);
+            add(legend);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: draws scatter points and mean value for quantitative dataframes
+    private void drawScatterPoints(QuantitativeDataframe df, Graphics g) {
+        for (int i = 0; i < df.getColX().size(); i++) {
+            int scatterX = scaleX(df.getColX().get(i));
+            int scatterY = scaleY(df.getColY().get(i));
+            g.fillOval(scatterX,scatterY,screenWidth / 200, screenWidth / 200);
+        }
+        g.setColor(Color.red);
+        int meanX = scaleX(df.getColXMean());
+        int meanY = scaleY(df.getColYMean());
+        g.fillRect(meanX,meanY,screenWidth / 200, screenWidth / 200);
+        g.setColor(Color.BLACK);
+    }
+
+    // MODIFIES: this
     // EFFECTS: creates graph for mixed data
     private void getMixedGraph(MixedDataframe df, Graphics g) {
+        dfMaxX = max(df.maxima());
         dfMaxY = max(df.maxima());
         ArrayList<Category> categories = df.getCategories();
         ArrayList<String> categoryNames = new ArrayList<>();
@@ -65,74 +167,18 @@ public class Graph extends JPanel {
     }
 
     // MODIFIES: this
-    // EFFECTS: creates graph for quantitative data
-    private void getQuantitativeGraph(QuantitativeDataframe df, Graphics g) {
-        dfMaxX = df.getColXMax();
-        dfMaxY = df.getColYMax();
-        drawScatterPoints(df, g);
-        drawQuantitativeXLabels(g);
-    }
-
-    // MODIFIES: this
-    // EFFECTS: creates axes lines
-    private void drawAxes(Graphics g) {
-        g.drawLine(originX, originY, maxX + screenWidth / 25, originY);
-        g.drawLine(originX, originY, originX, maxY - screenHeight / 25);
-    }
-
-    private void drawYLabels(Graphics g) {
-        for (int i = labels; i > 0; i--) {
-            g.drawLine(originX, originY * i / labels,
-                    originX - labelScale, originY * i / labels);
-
-            JLabel legend = new JLabel(String.valueOf(dfMaxY * (labels - i) / labels));
-            legend.setBounds(originX - 4 * labelScale, originY * i / labels - labelScale,
-                    screenWidth / (labelScale * 2), labelScale * 3 / 2);
-            add(legend);
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: draws labels for quantitative dataframes' x axis
-    private void drawQuantitativeXLabels(Graphics g) {
-        for (int i = 0; i < labels; i++) {
-            g.drawLine(maxX * i / labels + originX,
-                    originY,
-                    maxX * i / labels + originX,
-                    originY + labelScale);
-
-            JLabel legend = new JLabel(String.valueOf(dfMaxX * i / labels));
-            legend.setBounds(maxX * i / labels + originX,
-                    originY + 2 * labelScale,
-                    screenWidth / (labelScale * 2),
-                    labelScale * 3 / 2);
-            add(legend);
-        }
-    }
-
-
-    // MODIFIES: this
-    // EFFECTS: draws scatter points and mean value for quantitative dataframes
-    private void drawScatterPoints(QuantitativeDataframe df, Graphics g) {
-        for (int i = 0; i < df.getColX().size(); i++) {
-            int scatterX = scale(df.getColX().get(i), df.getColXMax(), maxX);
-            int scatterY = originY - scale(df.getColY().get(i), df.getColYMax(), originY - maxY);
-            g.fillOval(scatterX,scatterY,screenWidth / 200, screenWidth / 200);
-        }
-    }
-
-    // MODIFIES: this
     // EFFECTS: draws labels for mixed dataframes' x axis
     private void drawMixedXLabels(ArrayList<String> categories, Graphics g) {
         int size = categories.size();
         for (int i = 1; i <= size; i++) {
-            g.drawLine(maxX * i / (size + 1) + originX,
+            int labelX = maxX * i / (size + 1) + originX;
+            g.drawLine(labelX,
                     originY,
-                    maxX * i / (size + 1) + originX,
+                    labelX,
                     originY + labelScale);
 
             JLabel legend = new JLabel(categories.get(i - 1));
-            legend.setBounds(maxX * i / (size + 1) + originX - labelScale,
+            legend.setBounds(labelX - labelScale,
                     originY + 2 * labelScale,
                     screenWidth / (labelScale * 2),
                     labelScale * 3 / 2);
@@ -144,15 +190,14 @@ public class Graph extends JPanel {
     // EFFECTS: draws box plots for mixed dataframes
     private void drawBoxPlots(MixedDataframe df, Graphics g) {
         int size = df.getCategories().size();
-        int globalMax = max(df.maxima());
         for (int i = 0; i < size; i++) {
             int center = maxX * (i + 1) / (size + 1) + originX;
-            int max = scale(df.maxima().get(i), globalMax,originY - maxY);
-            int min = scale(df.minima().get(i), globalMax,originY - maxY);
-            int lowerFence = scale(df.get1QRs().get(i), globalMax,originY - maxY);
-            int upperFence = scale(df.get3QRs().get(i), globalMax,originY - maxY);
-            int median = scale(df.getMedians().get(i), globalMax,originY - maxY);
-            int quartileRange = scale(df.getIQRs().get(i), globalMax,originY - maxY);
+            int max = scaleY(df.maxima().get(i));
+            int min = scaleY(df.minima().get(i));
+            int lowerFence = scaleY(df.get1QRs().get(i));
+            int upperFence = scaleY(df.get3QRs().get(i));
+            int median = scaleY(df.getMedians().get(i));
+            int quartileRange = abs(upperFence - lowerFence);
             drawFence(lowerFence, center, size, g);
             drawFence(upperFence, center, size, g);
             drawFence(median, center, size, g);
@@ -165,22 +210,22 @@ public class Graph extends JPanel {
     // EFFECTS: draws fences for mixed dataframes
     private void drawFence(int i, int center, int size, Graphics g) {
         g.drawLine(center - screenWidth / (4 * size),
-                originY - i,
+                i,
                 center + screenWidth / (4 * size),
-                originY - i);
+                i);
     }
 
     // MODIFIES: this
     // EFFECTS: draws IQR "walls" for mixed dataframes
     private void drawIQR(int i, int lowerFence, int center, int size, Graphics g) {
         g.drawLine(center - screenWidth / (4 * size),
-                originY - lowerFence,
+                    lowerFence,
                 center - screenWidth / (4 * size),
-                originY - (lowerFence + i));
+                    (lowerFence - i));
         g.drawLine(center + screenWidth / (4 * size),
-                originY - lowerFence,
+                    lowerFence,
                 center + screenWidth / (4 * size),
-                originY - (lowerFence + i));
+                    (lowerFence - i));
     }
 
     // MODIFIES: this
@@ -188,29 +233,36 @@ public class Graph extends JPanel {
     private void drawWhiskers(int min, int max, int lowerFence, int upperFence, int center, int size, Graphics g) {
         // whiskers
         g.drawLine(center,
-                originY - lowerFence,
+                lowerFence,
                 center,
-                originY - min);
+                min);
         g.drawLine(center,
-                originY - upperFence,
+                upperFence,
                 center,
-                originY - max);
+                max);
         // extrema
         g.drawLine(center - screenWidth / (4 * size),
-                originY - min,
+                min,
                 center + screenWidth / (4 * size),
-                originY - min);
+                min);
         g.drawLine(center - screenWidth / (4 * size),
-                originY - max,
+                max,
                 center + screenWidth / (4 * size),
-                originY - max);
+                max);
     }
 
-    // REQUIRES: screenBound must be either maxX or maxY
+    // REQUIRES: i must be an x coordinate
     // EFFECTS: scales given number as a proportion size of the screen
-    //          then scales accordingly to a screen axis (width/height)
-    private int scale(double i, double max, int screenBound) {
-        return (int) Math.round((i / max) * screenBound);
+    //          then scales accordingly to screenWidth
+    public int scaleX(double i) {
+        return (int) Math.round((i / dfMaxX) * (maxX - originX) + originX);
+    }
+
+    // REQUIRES: i must be a y coordinate
+    // EFFECTS: scales given number as a proportion size of the screen
+    //          then scales accordingly to screenHeight
+    public int scaleY(double i) {
+        return (int) Math.round((originY - (((i / dfMaxY) * (originY - maxY)))));
     }
 
     // EFFECTS: return largest integer of given array
@@ -222,5 +274,23 @@ public class Graph extends JPanel {
             }
         }
         return (int) max;
+    }
+
+    // MODIFIES: this, main, main.ui, main.predictionEntryText, main.predictionEntryButton
+    // EFFECTS: initiates prediction features for quantitative dataframes
+    private void predictionOverlay(QuantitativeDataframe df, Graphics g) {
+        main.predictionEntryButton.addActionListener(e -> {
+            try {
+                double prediction = df.linearRegression(Double.parseDouble(main.predictionEntryField.getText()));
+                main.predictionEntryField.setText(String.valueOf(prediction));
+                int scaledX = scaleX(Double.parseDouble(main.predictionEntryField.getText()));
+                int scaledY = scaleY(df.getColYMean());
+                g.setColor(Color.BLUE);
+                g.fillRect(scaledX,scaledY,WIDTH / 200, WIDTH / 200);
+                g.setColor(Color.black);
+            } catch (Exception exception) {
+                main.predictionEntryText.setText("incompatible prediction made. Try again");
+            }
+        });
     }
 }

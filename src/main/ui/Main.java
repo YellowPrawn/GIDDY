@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import model.Data;
@@ -18,12 +19,13 @@ public class Main extends JFrame {
     JButton writeButton;
     JButton fileSearchButton;
     JButton saveButton;
-    JButton predictionEntryButton;
     JButton writeFileButton;
+    JButton predictionEntryButton;
 
     JLabel selectMode;
     JLabel fileName;
     JLabel dataEntryText;
+    JLabel saveFileText;
     JLabel predictionEntryText;
 
     JTextField fileSearchField;
@@ -37,8 +39,8 @@ public class Main extends JFrame {
     JPanel writePage;
     JPanel mixedDataPage;
     JPanel quantitativeDataPage;
+    Graph graph;
 
-    JTextField field;
     CardLayout cardLayout;
 
     public static void main(String[] args) {
@@ -68,6 +70,7 @@ public class Main extends JFrame {
         selectMode();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
         setVisible(true);
     }
 
@@ -97,8 +100,8 @@ public class Main extends JFrame {
         // panels with single buttons
         fileSearchButton.setBounds(WIDTH * 3 / 4, 0, WIDTH / 5, HEIGHT / 10);
         writeFileButton.setBounds(WIDTH * 3 / 4, 0, WIDTH / 5, HEIGHT / 10);
-        saveButton.setBounds(WIDTH * 3 / 4, 0, WIDTH / 5, HEIGHT / 10);
-        predictionEntryButton.setBounds(WIDTH * 3 / 4, 0, WIDTH / 5, HEIGHT / 10);
+        saveButton.setBounds(WIDTH * 7 / 8, 0, WIDTH / 8, HEIGHT / 20);
+        predictionEntryButton.setBounds(WIDTH * 3 / 8, 0, WIDTH / 8, HEIGHT / 20);
     }
 
     // MODIFIES: this
@@ -107,12 +110,14 @@ public class Main extends JFrame {
         selectMode = new JLabel("select mode:", SwingConstants.CENTER);
         fileName = new JLabel("enter file name", SwingConstants.CENTER);
         dataEntryText = new JLabel("enter data: (separated with commas)");
+        saveFileText = new JLabel("Enter file name");
         predictionEntryText = new JLabel("enter x value for prediction: ");
 
         selectMode.setBounds(WIDTH / 4, 0, WIDTH / 5, HEIGHT / 10);
         fileName.setBounds(WIDTH / 4, 0, WIDTH / 5, HEIGHT / 10);
         dataEntryText.setBounds(WIDTH / 4, 0, WIDTH / 5, HEIGHT / 10);
-        predictionEntryText.setBounds(WIDTH / 4, 0, WIDTH / 5, HEIGHT / 10);
+        saveFileText.setBounds(WIDTH * 5 / 8, 0, WIDTH / 5, HEIGHT / 20);
+        predictionEntryText.setBounds(WIDTH / 48, 0, WIDTH / 5, HEIGHT / 20);
     }
 
     // MODIFIES: this
@@ -121,12 +126,12 @@ public class Main extends JFrame {
         fileSearchField = new JTextField(20);
         saveFileField = new JTextField(20);
         writeFileField = new JTextField(20);
-        predictionEntryField = new JTextField(20);
+        predictionEntryField = new JTextField();
 
         fileSearchField.setBounds(WIDTH / 2, 0, WIDTH / 5, HEIGHT / 10);
-        saveFileField.setBounds(WIDTH / 2, 0, WIDTH / 5, HEIGHT / 10);
         writeFileField.setBounds(WIDTH / 2, 0, WIDTH / 5, HEIGHT / 10);
-        predictionEntryField.setBounds(WIDTH / 2, 0, WIDTH / 5, HEIGHT / 10);
+        saveFileField.setBounds(WIDTH * 6 / 8, 0, WIDTH / 8, HEIGHT / 20);
+        predictionEntryField.setBounds(WIDTH * 2 / 8, 0, WIDTH / 8, HEIGHT / 20);
     }
 
     // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage
@@ -162,6 +167,7 @@ public class Main extends JFrame {
         readPage.add(fileName);
         readPage.add(fileSearchField);
         readPage.add(fileSearchButton);
+
         fileSearchButton.addActionListener(e -> {
             try {
                 JsonReader reader = new JsonReader("src/main/data/" + fileSearchField.getText() + ".json");
@@ -184,7 +190,7 @@ public class Main extends JFrame {
         writeFileButton.addActionListener(e -> {
             Data data = new Data(writeFileField.getText());
             processData(data);
-            //saveData(data);
+            saveData(data);
         });
     }
 
@@ -214,68 +220,43 @@ public class Main extends JFrame {
     // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage
     // EFFECTS: processes data into correct outputs. If data is incompatible, restart program
     public void processData(Data data) {
-
         try {
-            Graph graph = new Graph(data, WIDTH, HEIGHT);
+            graph = new Graph(data, WIDTH, HEIGHT, this);
+
+            // for quantitative dataframes
+            graph.add(predictionEntryText);
+            graph.add(predictionEntryField);
+            graph.add(predictionEntryButton);
+
+            predictionEntryText.setVisible(false);
+            predictionEntryField.setVisible(false);
+            predictionEntryButton.setVisible(false);
+
             ui.add(graph, "results");
             cardLayout.show(ui, "results");
-            repaint();
         } catch (ClassCastException e) {
-            predictionEntryText.setText("incompatible dataframe entered. Try again\n");
+            selectMode.setText("incompatible dataframe entered. Try again\n");
             selectMode();
         }
     }
 
     // REQUIRES: non-empty Data object
     // MODIFIES: this, ui, startPage, readPage, writePage, mixedDataPage, QuantitativeDataPage
-    // EFFECTS: Saves raw data written by user into csv file. If selection is invalid, restart this function
-//    public void saveData(Data data) {
-//        // TODO: turn this into optional overlay
-//        b1 = new JButton("save raw data");
-//        b1.addActionListener(e -> {
-//            resetComponents();
-//            text = new JLabel("enter file name:");
-//            field = new JTextField();
-//            b1 = new JButton("save");
-//            b1.addActionListener(e2 -> {
-//                JsonWriter writer = new JsonWriter("src/main/data/" + field.getText() + ".json");
-//                try {
-//                    writer.open();
-//                } catch (FileNotFoundException ex) {
-//                    ex.printStackTrace();
-//                }
-//                writer.write(data);
-//                writer.close();
-//            });
-//            ui.add(text);
-//            ui.add(field);
-//            ui.add(b1);
-//        });
-//        ui.add(b1);
-//    }
-
-    // REQUIRES: non-empty Data object
-    // EFFECTS: prints all summary statistics in dataframe
-    public static void getQuantitativeSummary(QuantitativeDataframe df) {
-        System.out.println("optimal plot type: Scatterplot");
-        System.out.println("mean (x): " + df.getColXMean());
-        System.out.println("mean (y): " + df.getColYMean());
-        System.out.println("median (x): " + df.getColXMedian());
-        System.out.println("median (y): " + df.getColYMedian());
-        System.out.println("1st quartile (x): " + df.getColX1QR());
-        System.out.println("1st quartile (y): " + df.getColY1QR());
-        System.out.println("3rd quartile (x): " + df.getColX3QR());
-        System.out.println("3rd quartile (y): " + df.getColY3QR());
-        System.out.println("interquartile range (x): " + df.getColXIqR());
-        System.out.println("interquartile range (y): " + df.getColYIqR());
-        System.out.println("min (x): " + df.getColXMin());
-        System.out.println("min (y): " + df.getColYMin());
-        System.out.println("max (x): " + df.getColXMax());
-        System.out.println("max (y): " + df.getColYMax());
-        System.out.println("sum (x): " + df.getColXSum());
-        System.out.println("sum (y): " + df.getColYSum());
-        System.out.println("linear regression: " + df.regressionIntercept() + " + " + df.regressionSlope() + " * x");
-        System.out.println("enter x value for prediction: ");
-        //System.out.println("prediction: " + df.linearRegression(scanner.nextDouble()));
+    // EFFECTS: Saves raw data written by user into csv-like json file.
+    public void saveData(Data data) {
+        graph.add(saveFileText);
+        graph.add(saveFileField);
+        graph.add(saveButton);
+        saveButton.addActionListener(e -> {
+            JsonWriter writer = new JsonWriter("src/main/data/" + saveFileField.getText() + ".json");
+            try {
+                writer.open();
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
+            writer.write(data);
+            writer.close();
+            saveFileText.setText("file saved");
+        });
     }
 }
