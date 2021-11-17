@@ -97,6 +97,6 @@ public class QuantitativeDataframeTest extends QuantitativeAnalyzerTest {
     }
     @Test
     void testRegressionFunctions() {
-        assertEquals(22.857182241227424,testFrame.linearRegression(1));
+        assertEquals(6.0,Math.round(testFrame.linearRegression(1) * 100) / 100);
     }
 }

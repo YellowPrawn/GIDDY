@@ -24,6 +24,9 @@ public class Graph extends JPanel {
     int labelScale;
     double dfMaxX;
     double dfMaxY;
+    int predictionX;
+    int predictionY;
+    boolean drawPrediction = false;
     Main main;
 
     // MODIFIES: this
@@ -77,6 +80,9 @@ public class Graph extends JPanel {
             getMixedGraph(new MixedDataframe(data), g);
         }
         drawYLabels(g);
+        if (drawPrediction) {
+            drawPoint(predictionX, predictionY, Color.BLUE, g);
+        }
     }
 
     // MODIFIES: this
@@ -143,13 +149,11 @@ public class Graph extends JPanel {
         for (int i = 0; i < df.getColX().size(); i++) {
             int scatterX = scaleX(df.getColX().get(i));
             int scatterY = scaleY(df.getColY().get(i));
-            g.fillOval(scatterX,scatterY,screenWidth / 200, screenWidth / 200);
+            drawPoint(scatterX, scatterY, Color.black, g);
         }
-        g.setColor(Color.red);
         int meanX = scaleX(df.getColXMean());
         int meanY = scaleY(df.getColYMean());
-        g.fillRect(meanX,meanY,screenWidth / 200, screenWidth / 200);
-        g.setColor(Color.BLACK);
+        drawPoint(meanX, meanY, Color.red, g);
     }
 
     // MODIFIES: this
@@ -281,16 +285,23 @@ public class Graph extends JPanel {
     private void predictionOverlay(QuantitativeDataframe df, Graphics g) {
         main.predictionEntryButton.addActionListener(e -> {
             try {
-                double prediction = df.linearRegression(Double.parseDouble(main.predictionEntryField.getText()));
-                main.predictionEntryField.setText(String.valueOf(prediction));
-                int scaledX = scaleX(Double.parseDouble(main.predictionEntryField.getText()));
-                int scaledY = scaleY(df.getColYMean());
-                g.setColor(Color.BLUE);
-                g.fillRect(scaledX,scaledY,WIDTH / 200, WIDTH / 200);
-                g.setColor(Color.black);
+                double target = Double.parseDouble(main.predictionEntryField.getText());
+                double prediction = df.linearRegression(target);
+                predictionX = scaleX(target);
+                predictionY = scaleY(prediction);
+                drawPrediction = true;
             } catch (Exception exception) {
                 main.predictionEntryText.setText("incompatible prediction made. Try again");
             }
         });
+    }
+
+    // MODIFIES: this
+    // EFFECTS: draws a point on the graph
+    private void drawPoint(int x, int y, Color colour, Graphics g) {
+        g.setColor(colour);
+        g.fillOval(x,y,screenWidth / 200, screenWidth / 200);
+        g.setColor(Color.BLACK);
+        repaint();
     }
 }

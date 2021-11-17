@@ -118,7 +118,7 @@ public class QuantitativeDataframe extends QuantitativeAnalyzer {
     // REQUIRES: non-zero ArrayList<Double>
     // EFFECTS: gets standardized score of dataframe
     protected double standardizedScore(double i, ArrayList<Double> col) {
-        return i - getMean(col) / getSD(col);
+        return (i - getMean(col)) / getSD(col);
     }
 
     // EFFECTS: finds the correlation coefficient of the dataframe
@@ -127,7 +127,7 @@ public class QuantitativeDataframe extends QuantitativeAnalyzer {
         for (int i = 0; i < colX.size(); i++) {
             standardSum += standardizedScore(colX.get(i), colX) * standardizedScore(colY.get(i), colY);
         }
-        return standardSum / colX.size();
+        return standardSum / (colX.size() - 1);
     }
 
     // EFFECTS: finds the slope of regression of the dataframe
@@ -137,11 +137,11 @@ public class QuantitativeDataframe extends QuantitativeAnalyzer {
 
     // EFFECTS: finds the intercept of regression of the dataframe
     public double regressionIntercept() {
-        return getMean(colY) - regressionSlope() * getMean(colX);
+        return getMean(colY) - (regressionSlope() * getMean(colX));
     }
 
     // EFFECTS: finds the equation for linear regression of the dataframe
     public double linearRegression(double x) {
-        return regressionIntercept() + regressionSlope() * x;
+        return regressionIntercept() + (regressionSlope() * x);
     }
 }
