@@ -43,6 +43,7 @@ public class Main extends JFrame {
     Graph graph;
 
     CardLayout cardLayout;
+    EventLog eventLog;
 
     public static void main(String[] args) {
         new Main();
@@ -56,7 +57,7 @@ public class Main extends JFrame {
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                EventLog eventLog = EventLog.getInstance();
+                eventLog = EventLog.getInstance();
                 eventLog.iterator().forEachRemaining(System.out::println);
                 System.exit(0);
             }

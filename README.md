@@ -62,3 +62,10 @@ Wed Nov 24 21:09:15 PST 2021
 Element (20.0) added to category cat
 
 Process finished with exit code 0
+
+## Phase 4: Task 3
+GIDDY's UML class diagram demonstrates the interconnectedness of the entire program. It shows its modular design that allows for future adjustments that will not require a full refactoring of the entire codebase. 
+
+One challenge I encountered throughout the integration of the model package into the GUI was a result of this. By choosing the appropriate dataframe (Quantitative vs Mixed) and splitting them into two separate classes, I was forced into making a very complex and convoluted UI.
+
+If I more time to work on my project, I would seek to refactor my Data class such that additional abstract methods seen in both "sub" dataframe classes could be streamlined. The reason this architecture was not initially pursued was a result of my lack of knowledge in implementing a dynamic return type (switching between lists and single values)
