@@ -6,16 +6,21 @@ import java.util.ArrayList;
 public class Category {
     private String header;
     private ArrayList<Double> observations = new ArrayList<>();
+    EventLog eventLog = EventLog.getInstance();
 
     // EFFECTS: sets category headers
     public Category(String header) {
         this.header = header;
+        Event init = new Event("Category created (" + header + ")");
+        eventLog.logEvent(init);
     }
 
     // MODIFIES: this
     // EFFECTS: adds element to Observations
     public void addElement(Double element) {
         observations.add(element);
+        Event add = new Event("Element (" + element + ") added to category " + header);
+        eventLog.logEvent(add);
     }
 
     // EFFECTS: gets observation at ith position

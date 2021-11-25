@@ -1,0 +1,9 @@
+{
+    "header": "animal,food\n",
+    "row": [
+        "dog,50.0\n",
+        "dog,23.0\n",
+        "dog,89.0\n",
+        "dog,90.0\n"
+    ]
+}

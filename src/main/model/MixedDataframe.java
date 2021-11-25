@@ -5,13 +5,15 @@ import java.util.Objects;
 
 // Operations for nx2 dataframes which consists of a nx1 categorical vector and a 1xn quantitative vector
 public class MixedDataframe extends QuantitativeAnalyzer {
-
+    EventLog eventLog = EventLog.getInstance();
     private final ArrayList<Category> categories = new ArrayList<>();
 
     // REQUIRES: A column of Strings and a column of Doubles
     // EFFECTS: organizes data for processing
     public MixedDataframe(Data data) throws ClassCastException {
         super(data);
+        Event init = new Event("Mixed dataframe created");
+        eventLog.logEvent(init);
         correctColumnOrder();
         makeCategories();
         addCategoryData();
@@ -23,6 +25,8 @@ public class MixedDataframe extends QuantitativeAnalyzer {
     private void correctColumnOrder() {
         if (!Objects.equals(data.getTypeX(), "String")) {
             data.swapColumns();
+            Event swap = new Event("Dataframe columns swapped");
+            eventLog.logEvent(swap);
         }
     }
 
@@ -31,7 +35,10 @@ public class MixedDataframe extends QuantitativeAnalyzer {
     private void makeCategories() {
         for (int i = 0; i < data.getColX().size(); i++) {
             if (!scanExistingCategories(i)) {
-                categories.add(new Category((String) data.getColX().get(i)));
+                String categoryHeader = (String) data.getColX().get(i);
+                Event initCategory = new Event("Creating category (" + categoryHeader + ")");
+                eventLog.logEvent(initCategory);
+                categories.add(new Category(categoryHeader));
             }
         }
     }
@@ -42,7 +49,11 @@ public class MixedDataframe extends QuantitativeAnalyzer {
         for (int i = 0; i < data.getColX().size(); i++) {
             for (Category c : categories) {
                 if (c.getHeader().equals(data.getColX().get(i))) {
-                    c.addElement((Double) data.getColY().get(i));
+                    Double observation = (Double) data.getColY().get(i);
+                    Event addObservation = new Event("Adding Observation (" + observation + ") to category "
+                            + c.getHeader());
+                    eventLog.logEvent(addObservation);
+                    c.addElement(observation);
                 }
             }
         }

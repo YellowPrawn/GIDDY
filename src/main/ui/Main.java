@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import model.Data;
+import model.EventLog;
 import model.QuantitativeDataframe;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -51,6 +52,15 @@ public class Main extends JFrame {
     // EFFECTS: Initializes program
     public Main() {
         super("GIDDY");
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                EventLog eventLog = EventLog.getInstance();
+                eventLog.iterator().forEachRemaining(System.out::println);
+                System.exit(0);
+            }
+        });
         cardLayout = new CardLayout();
         cardLayout.minimumLayoutSize(this);
         initializeGraphics();

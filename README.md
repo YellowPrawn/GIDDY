@@ -20,3 +20,45 @@ I chose to pursue this project as a statistics student who feels that obtaining 
 - As a user, I want to be able to have n categories in my dataset and find summary statistics for each of them
 - As a user, I want to be able to read a preexisting dataset from file
 - As a user, I want to be able to read a preexisting dataset to file
+
+## Phase 4: Task 2
+Wed Nov 24 21:09:15 PST 2021
+Mixed dataframe created
+Wed Nov 24 21:09:15 PST 2021
+Creating category (cat)
+Wed Nov 24 21:09:15 PST 2021
+Category created (cat)
+Wed Nov 24 21:09:15 PST 2021
+Creating category (dog)
+Wed Nov 24 21:09:15 PST 2021
+Category created (dog)
+Wed Nov 24 21:09:15 PST 2021
+Creating category (horse)
+Wed Nov 24 21:09:15 PST 2021
+Category created (horse)
+Wed Nov 24 21:09:15 PST 2021
+Creating category (turtle)
+Wed Nov 24 21:09:15 PST 2021
+Category created (turtle)
+Wed Nov 24 21:09:15 PST 2021
+Adding Observation (15.0) to category cat
+Wed Nov 24 21:09:15 PST 2021
+Element (15.0) added to category cat
+Wed Nov 24 21:09:15 PST 2021
+Adding Observation (14.0) to category dog
+Wed Nov 24 21:09:15 PST 2021
+Element (14.0) added to category dog
+Wed Nov 24 21:09:15 PST 2021
+Adding Observation (75.0) to category horse
+Wed Nov 24 21:09:15 PST 2021
+Element (75.0) added to category horse
+Wed Nov 24 21:09:15 PST 2021
+Adding Observation (190.0) to category turtle
+Wed Nov 24 21:09:15 PST 2021
+Element (190.0) added to category turtle
+Wed Nov 24 21:09:15 PST 2021
+Adding Observation (20.0) to category cat
+Wed Nov 24 21:09:15 PST 2021
+Element (20.0) added to category cat
+
+Process finished with exit code 0
